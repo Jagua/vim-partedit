@@ -34,7 +34,7 @@ function! partedit#command(startline, endline, args)
 endfunction
 
 function! partedit#complete(lead, cmd, pos)
-  let options = ['-opener', '-prefix', '-filetype', '-auto_prefix']
+  let options = ['-opener', '-prefix', '-filetype', '-auto_prefix', '-strip_prefix']
   return filter(options, 'v:val =~# "^\\V" . escape(a:lead, "\\")')
 endfunction
 
@@ -50,6 +50,7 @@ function! partedit#start(startline, endline, ...)
   let contents = getline(a:startline, a:endline)
   let original_contents = contents
 
+  let strip_prefix = s:get_option('strip_prefix', options, 1)
   let prefix = s:get_option('prefix', options, '')
   if prefix !=# ''
     let sprefix = substitute(prefix, '\s\+$', '', '')
@@ -109,6 +110,7 @@ function! partedit#start(startline, endline, ...)
   let b:partedit__lines = [a:startline, a:endline]
   let b:partedit__contents = original_contents
   let b:partedit__prefix = prefix
+  let b:partedit__strip_prefix = strip_prefix
   let b:partedit__bufhidden = bufhidden
   setlocal buftype=acwrite nomodified bufhidden=wipe noswapfile
 
@@ -147,7 +149,7 @@ function! s:apply()
   if b:partedit__prefix !=# ''
     let prefix = b:partedit__prefix
     let sprefix = substitute(prefix, '\s\+$', '', '')
-    call map(contents, '(v:val ==# "" ? sprefix : prefix) . v:val')
+    call map(contents, '(v:val ==# "" && b:partedit__strip_prefix ? sprefix : prefix) . v:val')
   endif
   let bufnr = bufnr('%')
 

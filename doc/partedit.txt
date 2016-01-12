@@ -121,6 +121,11 @@ b:partedit_auto_prefix				*b:partedit_auto_prefix*
 	If this is true and |b:partedit_prefix| is empty, the common prefix of
 	range is treated as prefix.  The default value is true.
 
+g:partedit#strip_prefix				*g:partedit#strip_prefix*
+b:partedit_strip_prefix				*b:partedit_strip_prefix*
+	If this is true, blank of the end of empty line is removed.
+	The default value is true.
+
 
 
 ==============================================================================
